@@ -136,8 +136,7 @@ export class Application {
 
         switch (action) {
             case ActionType.EQUAL:
-                this.updateOutput(this.calculateTotal());
-                this.stack.push(new Action(ActionType.EQUAL));
+                this.reset(this.calculateTotal());
                 break;
 
             case ActionType.ADD:
@@ -169,18 +168,12 @@ export class Application {
     private onNumberButtonClick(value: Value) {
         if (this.stack.isEmpty()) {
             this.reset(value);
-            console.log(this.stack);
             return;
         }
 
         switch (this.stack.peek()!.type) {
             case OperationHistoryType.ACTION:
-                const action = this.stack.peek()! as Action;
-                if (action.value === ActionType.EQUAL) {
-                    this.reset(value);
-                } else {
-                    this.stack.push(value);
-                }
+                this.stack.push(value);
                 this.updateOutput(this.stack.peek()! as Value);
 
                 break;
