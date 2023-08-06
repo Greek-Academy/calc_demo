@@ -1,4 +1,4 @@
-import { Application } from "./domain/application/application";
+import { Application } from "./interface-adapter/application/application";
 import { DataBind } from "./interface-adapter/ui/data-bind.class";
 import { CustomCollection } from "./infrastructure/custom-collection";
 import { IButtonValue } from "./interface-adapter/ui/pad-button";

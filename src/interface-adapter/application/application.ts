@@ -1,10 +1,10 @@
 import { CustomCollection } from "../../infrastructure/custom-collection";
-import { ActionType, IActionValue } from "../model/action-value";
-import { INumberValue, NumberValue } from "../model/number-value";
-import { ValueKind } from "../model/value-kind";
-import { DataBind } from "../../interface-adapter/ui/data-bind.class";
-import { IButtonValue } from "../../interface-adapter/ui/pad-button";
-import { ICalculator } from "../calculator/icalculator";
+import { ActionType, IActionValue } from "../../domain/model/action-value";
+import { INumberValue, NumberValue } from "../../domain/model/number-value";
+import { ValueKind } from "../../domain/model/value-kind";
+import { DataBind } from "../ui/data-bind.class";
+import { IButtonValue } from "../ui/pad-button";
+import { ICalculator } from "../../domain/calculator/icalculator";
 
 enum AppStatus {
     ALIVE,
