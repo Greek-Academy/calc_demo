@@ -3,12 +3,15 @@ import { IPresenter } from "../presenter/presenter";
 export interface INumPad {
 
 }
-export class NumPad {
+export class NumPad  {
 
-  private wrapOnClick = (event: Event) => this.onButtonClick(event);
+  private wrap: Record<string, (event: Event) => void> = {
+    buttonClick: (event: Event) => this.onButtonClickHandler(event),
+  };
 
   constructor(
     private presenter: IPresenter,
+    private onButtonClick: (buttonValue: string) => void,
   ) {
     this.registeButtons('numberBtn');
     this.registeButtons('actionBtn');
@@ -23,11 +26,11 @@ export class NumPad {
       if (!(button instanceof HTMLButtonElement)) {
         throw new Error(`ボタンではない要素に .${cssClassName} が割り当ています。`);
       }
-      button.addEventListener('click', this.wrapOnClick);
+      button.addEventListener('click', this.wrap.buttonClick);
     });
   }
 
-  private onButtonClick(event: Event) {
+  private onButtonClickHandler(event: Event) {
     // Viewである NumPadからは、IPresenter.onClick() を呼び出す。
     // ここでポイントなのは、Presenterクラスではない、ということ。
     const buttonValue = (event.target as HTMLButtonElement).value as string;

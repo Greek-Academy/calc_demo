@@ -1,20 +1,49 @@
 import { EquationModel } from "./model/equation-model";
-import { Presenter } from "./presenter/presenter";
-import { Display } from "./view/display";
-import { NumPad } from "./view/num-pad";
+import { IPresenter, Presenter } from "./presenter/presenter";
+import { Display, IDisplay } from "./view/display";
+import { INumPad, NumPad } from "./view/num-pad";
 
 
-const display = new Display(
-  document.getElementById('display') as HTMLInputElement
-);
+class App {
+  
+  presenter: IPresenter;
+  display: IDisplay;
+  equation: EquationModel;
+  numPad: INumPad;
 
-const equation = new EquationModel();
+  wrap: Record<string, (...args: any[]) => void> = {
+    equationUpdate: (...args) => this.onEquationChanged.apply(this, args),
+  };
 
-const presenter = new Presenter(
-  display,
-  equation,
-);
+  constructor() {
+    this.display = new Display(
+      document.getElementById('display') as HTMLInputElement
+    );
 
-const numPad = new NumPad(
-  presenter,
-);
+    // Equationモデルが変更されたら、
+    // onEquationChanged() を呼び出す
+    this.equation = new EquationModel(
+      this.wrap.equationUpdate,
+    );
+
+    this.presenter = new Presenter(
+      this.display,
+      this.equation,
+    );
+
+    // [NumPad]のボタンが押されたら
+    // IPresenter.onClick() を呼び出す
+    this.numPad = new NumPad(
+      this.presenter,
+      this.presenter.onClick,
+    );
+
+  }
+
+  onEquationChanged(message: string) {
+    // IDisplay.update() を呼び出す
+    this.display.update(message);
+  }
+}
+
+new App();

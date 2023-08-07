@@ -1,6 +1,3 @@
-import { IPresenter } from "../presenter/presenter";
-import EventLite from 'event-lite';
-
 type properties = 'lhs' | 'rhs';
 enum CalcMode {
   NONE,
@@ -21,13 +18,17 @@ export interface IEquationModel {
   equal(): void;
 }
 
-export class EquationModel extends EventLite implements IEquationModel {
+export class EquationModel implements IEquationModel {
 
   private values: Record<properties, number> = {
     lhs: 0,
     rhs: 0,
   };
   private mode: CalcMode = CalcMode.NONE;
+
+  constructor(
+    private onDisplayUpdate: (message: string) => void,
+  ) {}
 
   clear() {
     this.values.lhs = 0;
@@ -137,8 +138,8 @@ export class EquationModel extends EventLite implements IEquationModel {
   }
 
   private update(message: number | string) {
-    // Equationモデルから、'update' イベントを発生させるということ。
+    // Equationモデルから、'onDisplayUpdate' を呼び出すということ。
     // そこから先はどうなっているのかが分からない。
-    this.emit('update', message);
+    this.onDisplayUpdate(message.toString());
   }
 }

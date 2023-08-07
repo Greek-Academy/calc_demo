@@ -5,7 +5,7 @@ export interface IPresenter {
   onClick(buttonValue: string);
 
   updateDisplay(message: string);
-
+onClick(buttonValue: string)
 }
 
 export class Presenter implements IPresenter {
@@ -17,13 +17,7 @@ export class Presenter implements IPresenter {
   constructor(
     private display: IDisplay,
     private equation: EquationModel,
-  ) {
-
-    // EquationModel から update イベントが発生したら、
-    // updateDisplay() を呼び出す。
-    this.equation.on('update', this.wrap.updateDisplay);
-
-  }
+  ) {}
 
 
   updateDisplay(message: string) {
