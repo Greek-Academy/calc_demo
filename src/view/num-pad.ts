@@ -1,12 +1,12 @@
-import EventLite from "event-lite";
+import { Controller } from "../controller";
 
-export class NumPad extends EventLite {
+export class NumPad {
 
   private wrapOnClick = (event: Event) => this.onButtonClick(event);
 
-  constructor() {
-    super();
-
+  constructor(
+    private controller: Controller,
+  ) {
     this.registeButtons('numberBtn');
     this.registeButtons('actionBtn');
   }
@@ -25,7 +25,8 @@ export class NumPad extends EventLite {
   }
 
   private onButtonClick(event: Event) {
+    // Controller側の onClick() を呼び出す
     const buttonValue = (event.target as HTMLButtonElement).value as String;
-    this.emit('click', buttonValue);
+    this.controller.onClick(buttonValue);
   }
 }

@@ -1,51 +1,34 @@
-import { Equation } from "./model";
-import { Display } from "./view/display";
-import { NumPad } from "./view/num-pad";
-
+import { EquationModel } from "./model/equation-model";
 export class Controller {
+ 
+  constructor(
+    private equation: EquationModel,
+  ) {}
   
-  readonly wrapOnClick = (...args: any[]) => this.onClick.apply(this, args);
-
-  private numPad = new NumPad();
-  private display = new Display(
-    document.getElementById('display') as HTMLInputElement,
-  );
-
-  readonly current: Equation = new Equation(
-    this.display,
-  );
-  
-  constructor() {
-    this.initView();
-  }
-
-  private initView() {
-    this.numPad.on('click', this.wrapOnClick);
-    Object.freeze(this);
-  }
-
+  // numPad (view) から onClick が呼び出されたら、
+  // equation (model) にルーティングする
   onClick(...args: any[]) {
     const buttonValue: string = args[0];
 
     switch(buttonValue) {
       case 'clear':
-        this.current.clear();
+        this.equation.clear();
         break;
       case 'add':
-        this.current.add();
+        this.equation.add();
         break;
       case 'subtract':
-        this.current.subtract();
+        this.equation.subtract();
         break;
         
       case 'multiply':
-        this.current.multiply();
+        this.equation.multiply();
         break;
       case 'divide':
-        this.current.divide();
+        this.equation.divide();
         break;
       case 'equal':
-        this.current.equal();
+        this.equation.equal();
         break;
       case '0':
       case '1':
@@ -57,7 +40,7 @@ export class Controller {
       case '7':
       case '8':
       case '9':
-        this.current.append(buttonValue);
+        this.equation.append(buttonValue);
         break;
       
       default:

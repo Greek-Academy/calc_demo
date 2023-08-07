@@ -1,11 +1,4 @@
-import EventLite from "event-lite";
-import { Display } from "./view/display";
-
-export type EventListener = (
-  eventName: String,
-  newValue: any,
-  oldValue: any,
-) => void;
+import { Display } from "../view/display";
 
 type properties = 'lhs' | 'rhs';
 enum CalcMode {
@@ -17,7 +10,7 @@ enum CalcMode {
   NEED_RESET_IF_APPEND,
 }
 
-export class Equation extends EventLite {
+export class EquationModel {
   private values: Record<properties, number> = {
     lhs: 0,
     rhs: 0,
@@ -26,9 +19,7 @@ export class Equation extends EventLite {
 
   constructor(
     private display: Display,
-  ) {
-    super()
-  }
+  ) {}
 
   clear() {
     this.values.lhs = 0;
@@ -138,6 +129,7 @@ export class Equation extends EventLite {
   }
 
   private update(message: number | string) {
+    // Equation Modelから、Displayを直接更新する
     this.display.update(message.toString());
   }
 }

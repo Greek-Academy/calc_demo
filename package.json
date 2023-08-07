@@ -10,9 +10,6 @@
     "preview": "vite preview"
   },
   "license": "MIT",
-  "dependencies": {
-    "event-lite": "^0.1.3"
-  },
   "devDependencies": {
     "typescript": "^5.1.6",
     "vite": "^4.4.8"
