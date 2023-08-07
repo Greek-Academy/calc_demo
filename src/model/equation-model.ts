@@ -1,10 +1,5 @@
-import EventLite from "event-lite";
-
-export type EventListener = (
-  eventName: String,
-  newValue: any,
-  oldValue: any,
-) => void;
+import { IPresenter } from "../presenter/presenter";
+import EventLite from 'event-lite';
 
 type properties = 'lhs' | 'rhs';
 enum CalcMode {
@@ -16,7 +11,18 @@ enum CalcMode {
   NEED_RESET_IF_APPEND,
 }
 
-export class Equation extends EventLite {
+export interface IEquationModel {
+  add(): void;
+  append(digit: string): void;
+  subtract(): void;
+  multiply(): void;
+  divide(): void;
+  clear(): void;
+  equal(): void;
+}
+
+export class EquationModel extends EventLite implements IEquationModel {
+
   private values: Record<properties, number> = {
     lhs: 0,
     rhs: 0,
@@ -131,6 +137,8 @@ export class Equation extends EventLite {
   }
 
   private update(message: number | string) {
-    this.emit('result', message.toString());
+    // Equationモデルから、'update' イベントを発生させるということ。
+    // そこから先はどうなっているのかが分からない。
+    this.emit('update', message);
   }
 }

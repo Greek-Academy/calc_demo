@@ -1,12 +1,15 @@
-import EventLite from "event-lite";
+import { IPresenter } from "../presenter/presenter";
 
-export class NumPad extends EventLite {
+export interface INumPad {
+
+}
+export class NumPad {
 
   private wrapOnClick = (event: Event) => this.onButtonClick(event);
 
-  constructor() {
-    super();
-
+  constructor(
+    private presenter: IPresenter,
+  ) {
     this.registeButtons('numberBtn');
     this.registeButtons('actionBtn');
   }
@@ -25,7 +28,9 @@ export class NumPad extends EventLite {
   }
 
   private onButtonClick(event: Event) {
-    const buttonValue = (event.target as HTMLButtonElement).value as String;
-    this.emit('click', buttonValue);
+    // Viewである NumPadからは、IPresenter.onClick() を呼び出す。
+    // ここでポイントなのは、Presenterクラスではない、ということ。
+    const buttonValue = (event.target as HTMLButtonElement).value as string;
+    this.presenter.onClick(buttonValue);
   }
 }

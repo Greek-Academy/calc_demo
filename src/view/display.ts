@@ -1,4 +1,8 @@
-export class Display {
+export interface IDisplay {
+  update(message: string);
+}
+
+export class Display implements IDisplay {
   
   constructor(
     private element: HTMLInputElement,
