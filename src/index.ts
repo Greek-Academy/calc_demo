@@ -1,3 +1,3 @@
-import { Controller } from "./controller";
+import { Presenter } from "./presenter";
 
-new Controller();
+new Presenter();

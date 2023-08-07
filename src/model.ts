@@ -1,5 +1,4 @@
 import EventLite from "event-lite";
-import { Display } from "./view/display";
 
 export type EventListener = (
   eventName: String,
@@ -23,12 +22,6 @@ export class Equation extends EventLite {
     rhs: 0,
   };
   private mode: CalcMode = CalcMode.NONE;
-
-  constructor(
-    private display: Display,
-  ) {
-    super()
-  }
 
   clear() {
     this.values.lhs = 0;
@@ -138,6 +131,6 @@ export class Equation extends EventLite {
   }
 
   private update(message: number | string) {
-    this.display.update(message.toString());
+    this.emit('result', message.toString());
   }
 }
