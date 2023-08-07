@@ -27,7 +27,7 @@ export class EquationModel implements IEquationModel {
   private mode: CalcMode = CalcMode.NONE;
 
   constructor(
-    private onDisplayUpdate: (message: string) => void,
+    private onChanged: (message: string) => void,
   ) {}
 
   clear() {
@@ -140,6 +140,6 @@ export class EquationModel implements IEquationModel {
   private update(message: number | string) {
     // Equationモデルから、'onDisplayUpdate' を呼び出すということ。
     // そこから先はどうなっているのかが分からない。
-    this.onDisplayUpdate(message.toString());
+    this.onChanged(message.toString());
   }
 }
