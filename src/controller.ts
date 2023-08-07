@@ -5,25 +5,23 @@ import { NumPad } from "./view/num-pad";
 export class Controller {
   
   readonly wrapOnClick = (...args: any[]) => this.onClick.apply(this, args);
-  readonly wrapOnDisplay = (...args: any[]) => this.onDisplay.apply(this, args);
 
-  readonly current: Equation = new Equation();
-  
   private numPad = new NumPad();
-  private display = new Display(document.getElementById('display') as HTMLInputElement);
+  private display = new Display(
+    document.getElementById('display') as HTMLInputElement,
+  );
 
+  readonly current: Equation = new Equation(
+    this.display,
+  );
+  
   constructor() {
     this.initView();
   }
 
   private initView() {
-    this.current.on('result', this.wrapOnDisplay);
     this.numPad.on('click', this.wrapOnClick);
     Object.freeze(this);
-  }
-
-  onDisplay(...args: any[]) {
-    this.display.update(args[0]);
   }
 
   onClick(...args: any[]) {
