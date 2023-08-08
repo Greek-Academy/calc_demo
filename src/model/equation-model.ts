@@ -1,3 +1,4 @@
+
 type properties = 'lhs' | 'rhs';
 enum CalcMode {
   NONE,
@@ -10,13 +11,15 @@ enum CalcMode {
 
 export interface IEquationModel {
   add(): void;
-  append(digit: string): void;
+  append(digit: number): void;
   subtract(): void;
   multiply(): void;
   divide(): void;
   clear(): void;
   equal(): void;
 }
+
+export type OnChangeListener = ((message: string) => void) | undefined;
 
 export class EquationModel implements IEquationModel {
 
@@ -26,9 +29,17 @@ export class EquationModel implements IEquationModel {
   };
   private mode: CalcMode = CalcMode.NONE;
 
-  constructor(
-    private onChanged: (message: string) => void,
-  ) {}
+  constructor() {}
+
+  private onChangeListener?: OnChangeListener;
+
+  set onChange(listener: OnChangeListener) {
+    this.onChangeListener = listener;
+  }
+  get onChange(): OnChangeListener {
+    return this.onChangeListener;
+  }
+
 
   clear() {
     this.values.lhs = 0;
@@ -38,12 +49,8 @@ export class EquationModel implements IEquationModel {
     this.update(0);
   }
 
-  append(digit: string) {
-    if (!/^[0-9]$/.test(digit)) {
-      throw new Error('append()には 0-9の半角数字のみ与えます');
-    }
-
-    const d = parseInt(digit);
+  append(digit: number) {
+    const d = digit % 10;
 
     switch (this.mode) {
       case CalcMode.NEED_RESET_IF_APPEND:
@@ -140,6 +147,9 @@ export class EquationModel implements IEquationModel {
   private update(message: number | string) {
     // Equationモデルから、'onDisplayUpdate' を呼び出すということ。
     // そこから先はどうなっているのかが分からない。
-    this.onChanged(message.toString());
+    if (!this.onChangeListener!) {
+      return;
+    }
+    this.onChangeListener(message.toString());
   }
 }
