@@ -1,5 +1,5 @@
 import { EquationModel } from "../model/equation-model";
-import { DataBind, ButtonBinderListener } from "../view";
+import { DataBind } from "../view";
 
 export class ViewModel {
   constructor(
