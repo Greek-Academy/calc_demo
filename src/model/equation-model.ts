@@ -145,7 +145,7 @@ export class EquationModel implements IEquationModel {
   }
 
   private update(message: number | string) {
-    // Equationモデルから、'onDisplayUpdate' を呼び出すということ。
+    // Equationモデルから、'onChangeListener' を呼び出すということ。
     // そこから先はどうなっているのかが分からない。
     if (!this.onChangeListener!) {
       return;
