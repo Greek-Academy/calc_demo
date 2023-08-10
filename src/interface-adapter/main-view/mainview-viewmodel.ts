@@ -75,9 +75,7 @@ export class MainViewViewModel implements IMainViewViewModel {
   private resetCalculation(initialValue: IButtonValue = NumberValue.ZERO) {
     this.equation.clear();
     this.equation.push(initialValue);
-    this.equation.push(new ActionValue(
-      ActionType.EQUAL,
-    ));
+    this.equation.push(new ActionValue(ActionType.EQUAL));
 
     this.updateOutput(initialValue);
   }
@@ -88,14 +86,13 @@ export class MainViewViewModel implements IMainViewViewModel {
 
   // ボタンが押されたときの処理
   private onButtonClick(buttonValue: IButtonValue) {
-
     // 前回の操作が [=]ボタン で、今回の操作が [数字]ボタンの場合、
     // 新しい数字からスタートする
     if (!this.equation.isEmpty()) {
       const last = this.equation.peek()!;
       if (
-        (last.value as ActionType === ActionType.EQUAL)  &&
-        (buttonValue.kind === ValueKind.NUMBER)
+        (last.value as ActionType) === ActionType.EQUAL &&
+        buttonValue.kind === ValueKind.NUMBER
       ) {
         this.equation.clear();
         this.equation.push(buttonValue);
@@ -111,7 +108,7 @@ export class MainViewViewModel implements IMainViewViewModel {
     ) {
       this.equation.pop();
     }
-    
+
     // もし式が空になったら、0 を入れる
     if (this.equation.isEmpty()) {
       this.equation.push(NumberValue.ZERO);
@@ -119,7 +116,6 @@ export class MainViewViewModel implements IMainViewViewModel {
 
     // 今回の操作が [数字]ボタン なら、最後の数字に追加する
     if (buttonValue.kind === ValueKind.NUMBER) {
-
       const leftHandValue = this.equation.pop() as INumberValue;
       this.equation.push(leftHandValue.append(buttonValue as INumberValue));
       this.updateOutput(this.equation.peek() as INumberValue);
