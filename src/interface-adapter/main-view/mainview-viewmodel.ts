@@ -1,5 +1,6 @@
 import {
   ActionType,
+  ActionValue,
   CustomCollection,
   IActionValue,
   ICalculator,
@@ -74,6 +75,9 @@ export class MainViewViewModel implements IMainViewViewModel {
   private resetCalculation(initialValue: IButtonValue = NumberValue.ZERO) {
     this.equation.clear();
     this.equation.push(initialValue);
+    this.equation.push(new ActionValue(
+      ActionType.EQUAL,
+    ));
 
     this.updateOutput(initialValue);
   }
@@ -84,26 +88,45 @@ export class MainViewViewModel implements IMainViewViewModel {
 
   // ボタンが押されたときの処理
   private onButtonClick(buttonValue: IButtonValue) {
-    // もしinputHistoryの最後に ActionValueが入っていたら排除する
+
+    // 前回の操作が [=]ボタン で、今回の操作が [数字]ボタンの場合、
+    // 新しい数字からスタートする
+    if (!this.equation.isEmpty()) {
+      const last = this.equation.peek()!;
+      if (
+        (last.value as ActionType === ActionType.EQUAL)  &&
+        (buttonValue.kind === ValueKind.NUMBER)
+      ) {
+        this.equation.clear();
+        this.equation.push(buttonValue);
+        this.updateOutput(this.equation.peek() as INumberValue);
+        return;
+      }
+    }
+
+    // 前回の操作が [数字]ボタン 以外なら、排除する
     while (
       !this.equation.isEmpty() &&
       this.equation.peek()?.kind === ValueKind.ACTION
     ) {
       this.equation.pop();
     }
+    
+    // もし式が空になったら、0 を入れる
     if (this.equation.isEmpty()) {
-      return;
+      this.equation.push(NumberValue.ZERO);
     }
 
-    // 数字ボタンなら、inputHistoryに追加
+    // 今回の操作が [数字]ボタン なら、最後の数字に追加する
     if (buttonValue.kind === ValueKind.NUMBER) {
+
       const leftHandValue = this.equation.pop() as INumberValue;
       this.equation.push(leftHandValue.append(buttonValue as INumberValue));
       this.updateOutput(this.equation.peek() as INumberValue);
       return;
     }
 
-    // アクションボタンの場合
+    // 今回の操作が [演算子] or [操作]ボタンの場合の処理
     switch (buttonValue.value) {
       case ActionType.ADD:
       case ActionType.SUBTRACT:
