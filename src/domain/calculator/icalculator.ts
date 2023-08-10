@@ -1,7 +1,8 @@
-import { CustomCollection } from "../../infrastructure/custom-collection";
-import { IButtonValue } from "../../interface-adapter/ui/pad-button";
-import { INumberValue } from "../model/number-value";
+import { CustomCollection } from './custom-collection';
+import { INumberValue, IActionValue } from '../model';
 
 export interface ICalculator {
-    calculate(equation: CustomCollection<IButtonValue>): INumberValue;
+  calculate(
+    equation: CustomCollection<INumberValue | IActionValue>
+  ): INumberValue;
 }

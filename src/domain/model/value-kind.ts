@@ -1,9 +1,9 @@
 export enum ValueKind {
-    NUMBER = "number",
-    ACTION = "action",
+  NUMBER = 'number',
+  ACTION = 'action',
 }
 
 export interface IValue<T> {
-    get kind(): ValueKind;
-    get value(): T;
+  get kind(): ValueKind;
+  get value(): T;
 }

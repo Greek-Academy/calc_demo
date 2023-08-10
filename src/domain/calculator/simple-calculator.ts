@@ -1,43 +1,47 @@
-import { CustomCollection } from "../../infrastructure/custom-collection";
-import { IButtonValue } from "../../interface-adapter/ui/pad-button";
-import { ActionType, ActionValue } from "../model/action-value";
-import { INumberValue, NumberValue } from "../model/number-value";
-import { ValueKind } from "../model/value-kind";
-import { ICalculator } from "./icalculator";
+import {
+  ActionType,
+  ActionValue,
+  IActionValue,
+  INumberValue,
+  NumberValue,
+  ValueKind,
+} from '../model';
+import { CustomCollection } from './custom-collection';
+import { ICalculator } from './icalculator';
 
 export class SimpleCalculator implements ICalculator {
-
-  
   private evaluate(
     leftHandSide: INumberValue,
     action: ActionType,
-    rightHandSide: INumberValue,
+    rightHandSide: INumberValue
   ): INumberValue {
     switch (action) {
-        case ActionType.ADD:
-            return leftHandSide.add(rightHandSide);
+      case ActionType.ADD:
+        return leftHandSide.add(rightHandSide);
 
-        case ActionType.SUBTRACT:
-            return leftHandSide.subtract(rightHandSide);
+      case ActionType.SUBTRACT:
+        return leftHandSide.subtract(rightHandSide);
 
-        case ActionType.MULTIPLY:
-            return leftHandSide.multiply(rightHandSide);
+      case ActionType.MULTIPLY:
+        return leftHandSide.multiply(rightHandSide);
 
-        case ActionType.DIVIDE:
-            if (rightHandSide.isZero()) {
-                return NumberValue.ZERO;
-            } else {
-                return leftHandSide.divide(rightHandSide);
-            }
+      case ActionType.DIVIDE:
+        if (rightHandSide.isZero()) {
+          return NumberValue.ZERO;
+        } else {
+          return leftHandSide.divide(rightHandSide);
+        }
 
-        default:
-            throw new Error(`不正なActionが指定されました: ${action}`);
+      default:
+        throw new Error(`不正なActionが指定されました: ${action}`);
     }
   }
 
-  calculate(equation: CustomCollection<IButtonValue>): INumberValue {
+  calculate(
+    equation: CustomCollection<INumberValue | IActionValue>
+  ): INumberValue {
     if (equation.length === 0) {
-        return NumberValue.ZERO;
+      return NumberValue.ZERO;
     }
 
     // 計算の初期値を取得
@@ -47,9 +51,10 @@ export class SimpleCalculator implements ICalculator {
     let leftHandSide: INumberValue = equation.getAt(0) as INumberValue;
 
     for (let i = 1; i < equation.length; i++) {
-        const value = equation.getAt(i);
-        switch (value.kind) {
-          case ValueKind.ACTION:
+      const value = equation.getAt(i);
+      switch (value.kind) {
+        case ValueKind.ACTION:
+          {
             if (i + 1 === equation.length) {
               break;
             }
@@ -59,21 +64,21 @@ export class SimpleCalculator implements ICalculator {
 
             const rightHandSide = equation.getAt(i + 1);
             leftHandSide = this.evaluate(
-                leftHandSide,
-                (value as ActionValue).value,
-                rightHandSide as INumberValue,
+              leftHandSide,
+              (value as ActionValue).value,
+              rightHandSide as INumberValue
             );
-            break;
-          
-          case ValueKind.NUMBER:
-            // Do nothing here
-            break;
-          
-          default:
-            throw new Error(`未対応なkindが指定されました : ${value.kind}`);
-        }
+          }
+          break;
+
+        case ValueKind.NUMBER:
+          // Do nothing here
+          break;
+
+        default:
+          throw new Error(`未対応なkindが指定されました : ${value.kind}`);
+      }
     }
     return leftHandSide;
   }
-
 }
